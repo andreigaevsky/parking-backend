@@ -26,14 +26,23 @@
             <groupId>org.bytedeco</groupId>
             <artifactId>opencv</artifactId>
             <version>4.1.2-1.5.2</version>
-            <classifier>linux-x86_64</classifier>
+            <classifier>linux-armhf</classifier>
         </dependency>
         <dependency>
             <groupId>org.bytedeco</groupId>
             <artifactId>opencv</artifactId>
             <version>4.1.2-1.5.2</version>
-            <classifier>linux-x86</classifier>
+            <classifier>linux-arm64</classifier>
         </dependency>
+        <dependency>
+            <groupId>org.bytedeco</groupId>
+            <artifactId>opencv</artifactId>
+            <version>4.1.2-1.5.2</version>
+            <classifier>linux-ppc64le</classifier>
+        </dependency>
+
+
+
         <dependency>
             <groupId>org.bytedeco</groupId>
             <artifactId>openblas</artifactId>
@@ -43,14 +52,23 @@
             <groupId>org.bytedeco</groupId>
             <artifactId>openblas</artifactId>
             <version>0.3.7-1.5.2</version>
-            <classifier>linux-x86_64</classifier>
+            <classifier>linux-armhf</classifier>
         </dependency>
         <dependency>
             <groupId>org.bytedeco</groupId>
             <artifactId>openblas</artifactId>
             <version>0.3.7-1.5.2</version>
-            <classifier>linux-x86</classifier>
+            <classifier>linux-arm64</classifier>
         </dependency>
+        <dependency>
+            <groupId>org.bytedeco</groupId>
+            <artifactId>openblas</artifactId>
+            <version>0.3.7-1.5.2</version>
+            <classifier>linux-ppc64le</classifier>
+        </dependency>
+
+
+
         <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-lang3</artifactId>
