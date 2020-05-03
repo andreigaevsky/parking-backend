@@ -72,16 +72,6 @@ public class DeepVision {
         }
     }
 
-    // cascade
-
-    public CascadeClassifierNetwork createCascadeFrontalFace() {
-        prepareDependencies(Repository.HaarCascadeFrontalFaceAlt);
-
-        return new CascadeClassifierNetwork(Repository.HaarCascadeFrontalFaceAlt.getPath(), "face");
-    }
-
-    // yolo
-
     private YOLONetwork createYOLONetwork(Dependency model, Dependency weights, Dependency names, int size) {
         prepareDependencies(model, weights, names);
 
@@ -119,101 +109,5 @@ public class DeepVision {
         return createYOLONetwork(Repository.YOLOv3SPPModel, Repository.YOLOv3SPPWeight, Repository.COCONames, inputSize);
     }
 
-    // pose
 
-    public SingleHumanPoseNetwork createSingleHumanPoseEstimation() {
-        prepareDependencies(Repository.SingleHumanPoseEstimationModel);
-        return new SingleHumanPoseNetwork(Repository.SingleHumanPoseEstimationModel.getPath());
-    }
-
-    // face detection
-    public ULFGFaceDetectionNetwork createULFGFaceDetectorRFB320() {
-        prepareDependencies(Repository.ULFGFaceDetectorRFB320Simplified);
-        return new ULFGFaceDetectionNetwork(Repository.ULFGFaceDetectorRFB320Simplified.getPath(), 320, 240);
-    }
-
-    public ULFGFaceDetectionNetwork createULFGFaceDetectorSlim320() {
-        prepareDependencies(Repository.ULFGFaceDetectorSlim320Simplified);
-        return new ULFGFaceDetectionNetwork(Repository.ULFGFaceDetectorSlim320Simplified.getPath(), 320, 240);
-    }
-
-    public ULFGFaceDetectionNetwork createULFGFaceDetectorRFB640() {
-        prepareDependencies(Repository.ULFGFaceDetectorRFB640Simplified);
-        return new ULFGFaceDetectionNetwork(Repository.ULFGFaceDetectorRFB640Simplified.getPath(), 640, 480);
-    }
-
-    public ULFGFaceDetectionNetwork createULFGFaceDetectorSlim640() {
-        prepareDependencies(Repository.ULFGFaceDetectorSlim640Simplified);
-        return new ULFGFaceDetectionNetwork(Repository.ULFGFaceDetectorSlim640Simplified.getPath(), 640, 480);
-    }
-
-    // facial landmark
-    public FacemarkLBFNetwork createFacemarkLBF() {
-        prepareDependencies(Repository.FaceMarkLBFModel);
-        return new FacemarkLBFNetwork(Repository.FaceMarkLBFModel.getPath());
-    }
-
-    // classification
-    public MNISTNetwork createMNISTClassifier() {
-        prepareDependencies(Repository.MNISTModel);
-        return new MNISTNetwork(Repository.MNISTModel.getPath());
-    }
-
-    public FERPlusEmotionNetwork createFERPlusEmotionClassifier() {
-        prepareDependencies(Repository.FERPlusEmotionModel);
-        return new FERPlusEmotionNetwork(Repository.FERPlusEmotionModel.getPath());
-    }
-
-    public AgeNetwork createAgeClassifier() {
-        prepareDependencies(Repository.AgeNetProtoText, Repository.AgeNetModel);
-        return new AgeNetwork(Repository.AgeNetProtoText.getPath(), Repository.AgeNetModel.getPath());
-    }
-
-    public GenderNetwork createGenderClassifier() {
-        prepareDependencies(Repository.GenderNetProtoText, Repository.GenderNetModel);
-        return new GenderNetwork(Repository.GenderNetProtoText.getPath(), Repository.GenderNetModel.getPath());
-    }
-
-    // ssd mobilenet
-
-    public SSDMobileNetwork createHandDetector() {
-        return createHandDetector(300);
-    }
-
-    public SSDMobileNetwork createHandDetector(int inputSize) {
-        prepareDependencies(Repository.HandTrackJSWeight, Repository.HandTrackJSConfig);
-        return new SSDMobileNetwork(Repository.HandTrackJSWeight.getPath(), Repository.HandTrackJSConfig.getPath(),
-                inputSize, inputSize, 0.5f, "hand");
-    }
-
-    public SSDMobileNetwork createMobileNetV2() {
-        return createMobileNetV2(300);
-    }
-
-    public SSDMobileNetwork createMobileNetV2(int inputSize) {
-        prepareDependencies(
-                Repository.SSDMobileNetV2COCOWeight,
-                Repository.SSDMobileNetV2COCOConfig,
-                Repository.COCOLabelsPaper);
-
-        SSDMobileNetwork network = new SSDMobileNetwork(Repository.SSDMobileNetV2COCOWeight.getPath(), Repository.SSDMobileNetV2COCOConfig.getPath(),
-                inputSize, inputSize, 0.5f);
-        network.loadLabels(Repository.COCOLabelsPaper.getPath());
-        return network;
-    }
-
-    public TextBoxesNetwork createTextBoxesDetector() {
-        prepareDependencies(Repository.TextBoxesProtoText, Repository.TextBoxesModel);
-        return new TextBoxesNetwork(Repository.TextBoxesProtoText.getPath(), Repository.TextBoxesModel.getPath());
-    }
-
-    public TesseractNetwork createTesseractRecognizer() {
-        prepareDependencies(Repository.TesseractEngBest);
-        return new TesseractNetwork(Repository.TesseractEngBest.getPath(), "eng");
-    }
-
-    public FSRCNNNetwork createFSCRNN() {
-        prepareDependencies(Repository.FSRCNNModel);
-        return new FSRCNNNetwork(Repository.FSRCNNModel.getPath());
-    }
 }
