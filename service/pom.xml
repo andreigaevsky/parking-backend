@@ -20,7 +20,7 @@
         </dependency>
         <dependency>
             <groupId>org.bytedeco</groupId>
-            <artifactId>opencv-platform</artifactId>
+            <artifactId>opencv</artifactId>
             <version>4.1.2-1.5.2</version>
             <classifier>linux-x86_64</classifier>
         </dependency>
