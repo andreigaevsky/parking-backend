@@ -16,7 +16,6 @@
             <groupId>org.bytedeco</groupId>
             <artifactId>javacv</artifactId>
             <version>1.5.2</version>
-            <classifier>linux-x86_64</classifier>
         </dependency>
         <dependency>
             <groupId>org.bytedeco</groupId>
@@ -36,7 +35,7 @@
         </dependency>
         <dependency>
             <groupId>org.bytedeco</groupId>
-            <artifactId>openblas-platform</artifactId>
+            <artifactId>openblas</artifactId>
             <version>0.3.7-1.5.2</version>
             <classifier>linux-x86_64</classifier>
         </dependency>
