@@ -41,16 +41,20 @@ public class ScheduledRecognition {
 
     private void fillData (Parking parking) {
         try {
+            System.out.println("111111111111"+parking.getAddress());
             BufferedImage image = getImage(parking.getUrl());
             List<ObjectDetectionResult> results = yoloService.recognize(image);
             int freeCount = (int) results.stream().filter(slot -> slot.getClassName().equals("free")).count();
             parking.setFreeSlotsCount(freeCount);
             parking.setAllSlotsCount(results.size());
+            System.out.println("2222222222222");
             parkingRepo.save(parking);
             log.info("UPDATED STATE IN "+parking.getAddress());
         }catch (IOException e) {
+            System.out.println("33333333333333333333333333");
             log.error(e.getMessage());
         }catch (NullPointerException e){
+            System.out.println("444444444444444444444444444444");
             log.error("NULL POINTER - "+e.getMessage());
         }
     }
