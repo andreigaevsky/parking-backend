@@ -4,15 +4,13 @@ import lombok.Generated;
 import lombok.Getter;
 import lombok.Setter;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.MappedSuperclass;
+import javax.persistence.*;
 
 @MappedSuperclass
 @Getter
 @Setter
 public abstract class BaseEntity {
     @Id
-    @Generated
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 }

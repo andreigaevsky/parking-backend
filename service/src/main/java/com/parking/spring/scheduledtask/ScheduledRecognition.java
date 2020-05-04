@@ -29,8 +29,9 @@ public class ScheduledRecognition {
     private YoloService yoloService;
 
 
-    @Scheduled(fixedRate = 300000)
+    @Scheduled(fixedRate = 60000)
     public void getCurrentSlotsState() {
+        log.info("New Parking Update");
         List<Parking> parkings = parkingRepo.findAll();
         for(Parking parking : parkings) {
             fillData(parking);
