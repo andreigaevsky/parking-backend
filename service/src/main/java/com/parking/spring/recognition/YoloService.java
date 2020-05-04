@@ -13,9 +13,9 @@ import java.util.List;
 public class YoloService {
 
     public static final int SIZE = 608;
-    public static final Path model = Paths.get ("networks\\yolov3.cfg");
-    public static final Path weight = Paths.get("networks\\yolov3.weights");
-    public static final Path names = Paths.get("networks\\coco.names");
+    public static final Path model = Paths.get ("networks/yolov3.cfg");
+    public static final Path weight = Paths.get("networks/yolov3.weights");
+    public static final Path names = Paths.get("networks/coco.names");
 
 
     private YOLONetwork yolo;
