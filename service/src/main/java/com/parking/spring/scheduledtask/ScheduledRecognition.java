@@ -29,10 +29,11 @@ public class ScheduledRecognition {
     private YoloService yoloService;
 
 
-    @Scheduled(fixedRate = 60000)
+    @Scheduled(fixedDelay = 60000L)
     public void getCurrentSlotsState() {
         log.info("New Parking Update");
         List<Parking> parkings = parkingRepo.findAll();
+        log.info("New Parking Update -- "+parkings.size());
         for(Parking parking : parkings) {
             fillData(parking);
         }
