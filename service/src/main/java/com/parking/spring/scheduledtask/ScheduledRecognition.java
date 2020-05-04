@@ -17,6 +17,7 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.net.URL;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 @Component
 public class ScheduledRecognition {
@@ -29,11 +30,10 @@ public class ScheduledRecognition {
     private YoloService yoloService;
 
 
-    @Scheduled(fixedDelay = 60000L)
+    @Scheduled(fixedRate = 300000)
     public void getCurrentSlotsState() {
-        log.info("New Parking Update");
-       List<Parking> parkings = parkingRepo.findAll();
-        log.info("New Parking Update -- "+parkings.size());
+        log.info("UPDATING PARKINGS STARTING...");
+        List<Parking> parkings = parkingRepo.findAll();
         for(Parking parking : parkings) {
             fillData(parking);
         }
@@ -41,22 +41,16 @@ public class ScheduledRecognition {
 
     private void fillData (Parking parking) {
         try {
-            System.out.println("111111111111"+parking.getAddress());
             BufferedImage image = getImage(parking.getUrl());
-            System.out.println("image");
             List<ObjectDetectionResult> results = yoloService.recognize(image);
-            System.out.println("yolo "+results.size());
             int freeCount = (int) results.stream().filter(slot -> slot.getClassName().equals("free")).count();
             parking.setFreeSlotsCount(freeCount);
             parking.setAllSlotsCount(results.size());
-            System.out.println("2222222222222");
             parkingRepo.save(parking);
             log.info("UPDATED STATE IN "+parking.getAddress());
         }catch (IOException e) {
-            System.out.println("33333333333333333333333333");
             log.error(e.getMessage());
         }catch (NullPointerException e){
-            System.out.println("444444444444444444444444444444");
             log.error("NULL POINTER - "+e.getMessage());
         }
     }
@@ -67,7 +61,7 @@ public class ScheduledRecognition {
             URL urlClass = new URL(url);
             image = ImageIO.read(urlClass);
         } else{
-            IPCameraFrameGrabber grabber = new IPCameraFrameGrabber(url,-1,-1,null);
+            IPCameraFrameGrabber grabber = new IPCameraFrameGrabber(url,10,10, TimeUnit.SECONDS);
             grabber.start();
             image = grabber.grabBufferedImage();
             grabber.stop();

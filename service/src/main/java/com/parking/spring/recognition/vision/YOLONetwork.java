@@ -51,7 +51,6 @@ public class YOLONetwork extends ObjectDetectionNetwork {
     }
 
     public ResultList<ObjectDetectionResult> run(Mat frame) {
-        System.out.println("run");
         // convert image into batch of images
         Mat inputBlob = blobFromImage(frame,
                 1 / 255.0,
