@@ -51,6 +51,7 @@ public class YoloService {
             System.out.println(detection.getClassName() + "\t[" + detection.getConfidence() + "]");
             confidenceSum += detection.getConfidence();
         }*/
+        System.out.println("recognize");
        return yolo.run(image);
     }
 

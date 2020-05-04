@@ -32,19 +32,20 @@ public class ScheduledRecognition {
     @Scheduled(fixedDelay = 60000L)
     public void getCurrentSlotsState() {
         log.info("New Parking Update");
-       /* List<Parking> parkings = parkingRepo.findAll();
+       List<Parking> parkings = parkingRepo.findAll();
         log.info("New Parking Update -- "+parkings.size());
         for(Parking parking : parkings) {
             fillData(parking);
-        }*/
+        }
     }
 
     private void fillData (Parking parking) {
         try {
             System.out.println("111111111111"+parking.getAddress());
             BufferedImage image = getImage(parking.getUrl());
-            System.out.println("111111111111"+parking.getAddress());
+            System.out.println("image");
             List<ObjectDetectionResult> results = yoloService.recognize(image);
+            System.out.println("yolo "+results.size());
             int freeCount = (int) results.stream().filter(slot -> slot.getClassName().equals("free")).count();
             parking.setFreeSlotsCount(freeCount);
             parking.setAllSlotsCount(results.size());
