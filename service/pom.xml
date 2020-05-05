@@ -15,7 +15,7 @@
         <dependency>
             <groupId>org.bytedeco</groupId>
             <artifactId>javacv</artifactId>
-            <version>1.5.3</version>
+            <version>1.5.2</version>
         </dependency>
         <dependency>
             <groupId>org.bytedeco</groupId>
@@ -27,6 +27,12 @@
             <artifactId>openblas-platform</artifactId>
             <version>0.3.7-1.5.2</version>
         </dependency>
+        <dependency>
+            <groupId>org.bytedeco</groupId>
+            <artifactId>ffmpeg</artifactId>
+            <version>4.2.1-1.5.2</version>
+        </dependency>
+
 
 
 
