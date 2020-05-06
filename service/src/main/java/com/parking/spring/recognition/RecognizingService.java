@@ -70,7 +70,7 @@ public class RecognizingService extends PApplet {
         println("loading model...");
         yolo.setup();
 
-        yolo.setConfidenceThreshold(0.35f);
+        yolo.setConfidenceThreshold(0.30f);
 
         println("inferencing...");
        detections = yolo.run(newImage);

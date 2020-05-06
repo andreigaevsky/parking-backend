@@ -11,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.imageio.ImageIO;
+import javax.validation.Valid;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -34,7 +35,7 @@ public class Parking {
     }
 
     @PostMapping("/new")
-    public ResponseEntity<ParkingDto> createNew(@RequestBody ParkingCreateDto newParking) {
+    public ResponseEntity<ParkingDto> createNew(@RequestBody @Valid ParkingCreateDto newParking) {
         return  ResponseEntity.ok(parkingService.createNew(newParking));
     }
 
