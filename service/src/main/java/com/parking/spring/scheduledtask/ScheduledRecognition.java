@@ -30,7 +30,7 @@ public class ScheduledRecognition {
     private YoloService yoloService;
 
 
-    @Scheduled(fixedRate = 300000)
+    @Scheduled(fixedRate = 180000)
     public void getCurrentSlotsState() {
         log.info("UPDATING PARKINGS STARTING...");
         List<Parking> parkings = parkingRepo.findAll();
