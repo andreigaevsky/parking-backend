@@ -12,7 +12,6 @@ import javax.persistence.Id;
 @Getter
 @Setter
 public class Parking extends BaseEntity{
-
     private String address;
     private String lat;
     private String lng;
