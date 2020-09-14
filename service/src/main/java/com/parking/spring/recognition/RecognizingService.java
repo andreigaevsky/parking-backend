@@ -41,17 +41,17 @@ public class RecognizingService extends PApplet {
        /* String f = "D:\\best.jpg";
       BufferedImage image = ImageIO.read(new File(f));*/
 
-       URL url = new URL("http://89.250.150.72:90/webcapture.jpg?command=snap&channel=1");
+      /* URL url = new URL("http://89.250.150.72:90/webcapture.jpg?command=snap&channel=1");
         BufferedImage image = ImageIO.read(url);
-        File outputfile = new File("image.jpg");
-        ImageIO.write(image, "jpg", outputfile);
+        File outputfile = new File("image.jpg");http://109.236.111.203:90/mjpg/video.mjpg
+        ImageIO.write(image, "jpg", outputfile);*/
 
-        /*IPCameraFrameGrabber grabber = new IPCameraFrameGrabber("http://94.72.19.56/mjpg/video.mjpg",-1,-1,null);
+        IPCameraFrameGrabber grabber = new IPCameraFrameGrabber("http://109.236.111.203:90/mjpg/video.mjpg",-1,-1,null);
        grabber.start();
        BufferedImage image = grabber.grabBufferedImage();
        grabber.stop();
         File outputfile = new File("image.jpg");
-        ImageIO.write(image, "jpg", outputfile);*/
+        ImageIO.write(image, "jpg", outputfile);
         BufferedImage newImage = new BufferedImage(image.getWidth(), image.getHeight(), BufferedImage.TYPE_INT_ARGB);
 
 
@@ -70,7 +70,7 @@ public class RecognizingService extends PApplet {
         println("loading model...");
         yolo.setup();
 
-        yolo.setConfidenceThreshold(0.30f);
+        yolo.setConfidenceThreshold(0.3f);
 
         println("inferencing...");
        detections = yolo.run(newImage);
