@@ -1,11 +1,14 @@
 package com.parking.spring.recognition.vision.result;
 
+import java.awt.*;
+
 public class ObjectDetectionResult extends ClassificationResult {
     // location
     private int x;
     private int y;
     private int width;
     private int height;
+    private Rectangle rectangle;
 
     public ObjectDetectionResult(int classId, String className, float confidence, int x, int y, int width, int height) {
         super(classId, className, confidence);
@@ -14,6 +17,7 @@ public class ObjectDetectionResult extends ClassificationResult {
         this.y = y;
         this.width = width;
         this.height = height;
+        this.rectangle = new Rectangle(x, y, width, height);
     }
 
     public int getX() {
@@ -32,6 +36,10 @@ public class ObjectDetectionResult extends ClassificationResult {
         return height;
     }
 
+    public Rectangle getRectangle() {
+        return rectangle;
+    }
+
     public void scale(float xScale, float yScale) {
         int dx = Math.round(width * xScale) - width;
         int dy = Math.round(height * yScale) - height;
@@ -41,5 +49,25 @@ public class ObjectDetectionResult extends ClassificationResult {
 
         this.width += dx * 2;
         this.height += dy * 2;
+    }
+
+    public void setX(int x) {
+        this.x = x;
+    }
+
+    public void setY(int y) {
+        this.y = y;
+    }
+
+    public void setWidth(int width) {
+        this.width = width;
+    }
+
+    public void setHeight(int height) {
+        this.height = height;
+    }
+
+    public void setRectangle(Rectangle rectangle) {
+        this.rectangle = rectangle;
     }
 }
