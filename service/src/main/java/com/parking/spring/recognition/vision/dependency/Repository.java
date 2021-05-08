@@ -21,6 +21,13 @@ public class Repository {
     public static final Dependency YOLOv3Model = new Dependency("yolov3.cfg");
     public static final Dependency YOLOv3Weight = new Dependency("yolov3.weights");
 
+    public static final Dependency YOLOv3CarsModel = new Dependency("yolov3Cars.cfg");
+    public static final Dependency YOLOv3CarsWeight = new Dependency("yolov3Cars.weights");
+
+    public static final Dependency YOLOv3TestModel = new Dependency("yolov3Test.cfg");
+    public static final Dependency YOLOv3TestWeight = new Dependency("yolov3Test.weights");
+    public static final Dependency YOLOv3Test2Weight = new Dependency("yolov3Test2.weights");
+
     public static final Dependency YOLOv3TinyModel = new Dependency("yolov3-tiny.cfg");
     public static final Dependency YOLOv3TinyWeight = new Dependency("yolov3-tiny.weights");
 

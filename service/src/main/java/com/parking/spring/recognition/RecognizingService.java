@@ -22,6 +22,8 @@ import java.util.stream.Collectors;
 
 public class RecognizingService extends PApplet {
 
+    private static String IMAGE_NAME = "image.jpg";
+
     public static void main(String... args) {
         RecognizingService sketch = new RecognizingService();
         sketch.runSketch();
@@ -39,12 +41,14 @@ public class RecognizingService extends PApplet {
         colorMode(HSB, 360, 100, 100);
 
         System.out.println(new Date());
-        String f = "D:\\4.png";
+        String f = "C:\\9.png";
+        IMAGE_NAME = "C:\\9.png";
         BufferedImage image = ImageIO.read(new File(f));
 
-        //BufferedImage image = getImageFromImageUrl("http://80.117.204.186:90/cgi-bin/snapshot.cgi?chn=0&u=admin&p=&q=0");
-        //http://121.125.133.92:8000/webcapture.jpg?command=snap&channel=1?1615109984
-        //BufferedImage image = getImageFromMediaUrl("http://96.56.250.139:8200/mjpg/video.mjpg");
+        //BufferedImage image = getAndSaveImageFromImageUrl("http://93.170.62.158:81/jpgmulreq/1/image.jpg?key=1516975535684&lq=1");
+        //"http://80.117.204.186:90/cgi-bin/snapshot.cgi?chn=0&u=admin&p=&q=0"
+        //http://64.138.207.98/cgi-bin/camera?resolution=640&amp;quality=1&amp;Language=0&amp;
+        //BufferedImage image = getAndSaveImageFromMediaUrl("http://96.56.250.139:8200/mjpg/video.mjpg");
         BufferedImage newImage = new BufferedImage(image.getWidth(), image.getHeight(), BufferedImage.TYPE_INT_ARGB);
 
         Graphics2D g = newImage.createGraphics();
@@ -55,14 +59,14 @@ public class RecognizingService extends PApplet {
 
         // camera.open("http://94.72.19.56/mjpg/video.mjpg");
 
-        testImage = loadImage(sketchPath(f));
+        testImage = loadImage(sketchPath(IMAGE_NAME));
         println("creating network...");
-        yolo = vision.createYOLOv3();
+        yolo = vision.createYOLOv3Test2();
 
         println("loading model...");
         yolo.setup();
 
-        yolo.setConfidenceThreshold(0.1f);
+        yolo.setConfidenceThreshold(0.3f);
 
         println("inferencing...");
         detections = yolo.run(newImage);
@@ -94,9 +98,6 @@ public class RecognizingService extends PApplet {
                 intersections = intersections.stream().filter(i -> {
                     Rectangle r = object.getRectangle().intersection(i.getRectangle());
                     double intr = r.getHeight() * r.getWidth() / (object.getRectangle().getWidth() * object.getRectangle().getHeight());
-                    System.out.println("ratio: " + intr);
-                    System.out.println("intersection area: " + r.getHeight() * r.getWidth());
-                    System.out.println("object area:" + (object.getRectangle().getWidth() * object.getRectangle().getHeight()));
                     return intr > 0.3 && ((int) intr) != 1;
                 }).collect(Collectors.toList());
 
@@ -132,21 +133,21 @@ public class RecognizingService extends PApplet {
     }
 
 
-    private BufferedImage getImageFromImageUrl(String imageUrl) throws IOException {
+    private BufferedImage getAndSaveImageFromImageUrl(String imageUrl) throws IOException {
         URL url = new URL(imageUrl);
         BufferedImage image = ImageIO.read(url);
-        File outputfile = new File("image.jpg");//http://109.236.111.203:90/mjpg/video.mjpg
+        File outputfile = new File(IMAGE_NAME);//http://109.236.111.203:90/mjpg/video.mjpg
         ImageIO.write(image, "jpg", outputfile);
 
         return image;
     }
 
-    private BufferedImage getImageFromMediaUrl(String mediaUrl) throws IOException {
+    private BufferedImage getAndSaveImageFromMediaUrl(String mediaUrl) throws IOException {
         IPCameraFrameGrabber grabber = new IPCameraFrameGrabber(mediaUrl, -1, -1, null);
         grabber.start();
         BufferedImage image = grabber.grabBufferedImage();
         grabber.stop();
-        File outputfile = new File("image.jpg");
+        File outputfile = new File(IMAGE_NAME);
         ImageIO.write(image, "jpg", outputfile);
 
         return image;

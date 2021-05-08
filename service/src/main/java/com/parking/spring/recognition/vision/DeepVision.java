@@ -93,6 +93,19 @@ public class DeepVision {
         return createYOLONetwork(Repository.YOLOv3Model, Repository.YOLOv3Weight, Repository.COCONames, inputSize);
     }
 
+    public YOLONetwork createYOLOv3Cars() {
+        return createYOLONetwork(Repository.YOLOv3CarsModel, Repository.YOLOv3CarsWeight, Repository.COCONames, 608);
+    }
+
+    public YOLONetwork createYOLOv3Test() {
+        return createYOLONetwork(Repository.YOLOv3TestModel, Repository.YOLOv3TestWeight, Repository.COCONames, 608);
+    }
+
+    public YOLONetwork createYOLOv3Test2() {
+        return createYOLONetwork(Repository.YOLOv3TestModel, Repository.YOLOv3Test2Weight, Repository.COCONames, 608);
+    }
+
+
     public YOLONetwork createYOLOv3Tiny() {
         return createYOLOv3Tiny(416);
     }
