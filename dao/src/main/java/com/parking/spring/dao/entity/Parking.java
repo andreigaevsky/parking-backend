@@ -7,6 +7,7 @@ import org.hibernate.annotations.ColumnDefault;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.Lob;
 
 @Entity
 @Getter
@@ -16,8 +17,10 @@ public class Parking extends BaseEntity{
     private String lat;
     private String lng;
     private String url;
-    @ColumnDefault("false")
+    @ColumnDefault("true")
     private boolean isConfirmed;
     private int freeSlotsCount;
     private int allSlotsCount;
+    @Lob
+    private byte[] image;
 }

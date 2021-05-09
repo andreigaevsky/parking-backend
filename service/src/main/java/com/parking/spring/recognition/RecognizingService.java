@@ -41,8 +41,8 @@ public class RecognizingService extends PApplet {
         colorMode(HSB, 360, 100, 100);
 
         System.out.println(new Date());
-        String f = "C:\\9.png";
-        IMAGE_NAME = "C:\\9.png";
+        String f = "D:\\downloads\\1.jpg";
+        IMAGE_NAME = "D:\\downloads\\1.jpg";
         BufferedImage image = ImageIO.read(new File(f));
 
         //BufferedImage image = getAndSaveImageFromImageUrl("http://93.170.62.158:81/jpgmulreq/1/image.jpg?key=1516975535684&lq=1");
@@ -61,12 +61,12 @@ public class RecognizingService extends PApplet {
 
         testImage = loadImage(sketchPath(IMAGE_NAME));
         println("creating network...");
-        yolo = vision.createYOLOv3Test2();
+        yolo = vision.createYOLOv3();
 
         println("loading model...");
         yolo.setup();
 
-        yolo.setConfidenceThreshold(0.3f);
+        yolo.setConfidenceThreshold(0.1f);
 
         println("inferencing...");
         detections = yolo.run(newImage);
@@ -157,8 +157,9 @@ public class RecognizingService extends PApplet {
     @Override
     public void draw() {
         background(55);
+PImage img = new PImage(testImage.width, testImage.height);
 
-        image(testImage, 0, 0);
+        image(img, 0, 0);
 
         noFill();
         strokeWeight(2f);
@@ -170,9 +171,8 @@ public class RecognizingService extends PApplet {
             textSize(15);
             text(detection.getClassName(), detection.getX(), detection.getY());
         }
-
+        saveFrame("ino.jpg");
     }
-
 
     private BufferedImage getImage() {
         byte[] curFrame = new byte[0];

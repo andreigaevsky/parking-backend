@@ -27,6 +27,7 @@ public class ParkingService {
         parking = converterService.toEntity(newParking, Parking.class).orElseThrow(IllegalArgumentException::new);
         parking.setAllSlotsCount(0);
         parking.setFreeSlotsCount(0);
+        parking.setConfirmed(true);
         return converterService.toDto(parkingRepo.save(parking),ParkingDto.class).orElse(null);
     }
 

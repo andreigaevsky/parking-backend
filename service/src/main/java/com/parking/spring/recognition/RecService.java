@@ -17,7 +17,7 @@ public class RecService {
 
 
     private BufferedImage GrabImage(String url) throws IOException {
-        IPCameraFrameGrabber grabber = new IPCameraFrameGrabber("http://94.72.19.56/mjpg/video.mjpg",-1,-1,null);
+        IPCameraFrameGrabber grabber = new IPCameraFrameGrabber("http://94.72.19.56/mjpg/video.mjpg", -1, -1, null);
         grabber.start();
         BufferedImage image = grabber.grabBufferedImage();
         grabber.stop();

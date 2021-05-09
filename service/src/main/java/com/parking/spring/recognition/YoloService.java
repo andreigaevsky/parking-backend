@@ -13,7 +13,7 @@ import java.util.List;
 public class YoloService {
 
     public static final int SIZE = 608;
-    public static final Path model = Paths.get ("networks/yolov3.cfg");
+    public static final Path model = Paths.get("networks/yolov3.cfg");
     public static final Path weight = Paths.get("networks/yolov3.weights");
     public static final Path names = Paths.get("networks/coco.names");
 
@@ -22,7 +22,7 @@ public class YoloService {
 
     public YoloService() {
 
-        yolo =  new YOLONetwork(
+        yolo = new YOLONetwork(
                 model,
                 weight,
                 SIZE, SIZE
@@ -33,7 +33,7 @@ public class YoloService {
     }
 
     public void setConfidenceThreshold(float num) {
-        if(num > 0 && num < 1){
+        if (num > 0 && num < 1) {
             yolo.setConfidenceThreshold(num);
         }
     }
@@ -51,7 +51,7 @@ public class YoloService {
             System.out.println(detection.getClassName() + "\t[" + detection.getConfidence() + "]");
             confidenceSum += detection.getConfidence();
         }*/
-       return yolo.run(image);
+        return yolo.run(image);
     }
 
 }
