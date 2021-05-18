@@ -18,7 +18,7 @@ public class Parking extends BaseEntity{
     private String lng;
     private String url;
     @ColumnDefault("true")
-    private boolean isConfirmed;
+    private boolean confirmed;
     private int freeSlotsCount;
     private int allSlotsCount;
     @Lob

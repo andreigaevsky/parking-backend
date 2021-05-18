@@ -43,9 +43,9 @@ public class RecognizingService extends PApplet {
         System.out.println(new Date());
         String f = "D:\\downloads\\1.jpg";
         IMAGE_NAME = "D:\\downloads\\1.jpg";
-        BufferedImage image = ImageIO.read(new File(f));
+       // BufferedImage image = ImageIO.read(new File(f));
 
-        //BufferedImage image = getAndSaveImageFromImageUrl("http://93.170.62.158:81/jpgmulreq/1/image.jpg?key=1516975535684&lq=1");
+        BufferedImage image = getAndSaveImageFromImageUrl("http://89.250.150.72:90/webcapture.jpg?command=snap&channel=1");
         //"http://80.117.204.186:90/cgi-bin/snapshot.cgi?chn=0&u=admin&p=&q=0"
         //http://64.138.207.98/cgi-bin/camera?resolution=640&amp;quality=1&amp;Language=0&amp;
         //BufferedImage image = getAndSaveImageFromMediaUrl("http://96.56.250.139:8200/mjpg/video.mjpg");
@@ -157,9 +157,9 @@ public class RecognizingService extends PApplet {
     @Override
     public void draw() {
         background(55);
-PImage img = new PImage(testImage.width, testImage.height);
+//PImage img = new PImage(testImage.width, testImage.height);
 
-        image(img, 0, 0);
+        image(testImage, 0, 0);
 
         noFill();
         strokeWeight(2f);

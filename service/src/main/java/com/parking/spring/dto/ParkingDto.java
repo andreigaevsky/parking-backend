@@ -14,6 +14,7 @@ public class ParkingDto {
     private String address;
     private int freeSlotsCount;
     private int allSlotsCount;
+    private boolean confirmed;
     private String lat;
     private String lng;
     private byte[] image;

@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class ParkingService {
@@ -19,16 +20,16 @@ public class ParkingService {
     private ConverterService converterService;
 
     public List<ParkingDto> getAllParkingInfo() {
-        return  converterService.toDtoList(parkingRepo.findAll(), ParkingDto.class);
+        return converterService.toDtoList(parkingRepo.findAll(), ParkingDto.class).stream().filter(ParkingDto::isConfirmed).collect(Collectors.toList());
     }
 
-    public ParkingDto createNew(ParkingCreateDto newParking) throws IllegalArgumentException{
+    public ParkingDto createNew(ParkingCreateDto newParking) throws IllegalArgumentException {
         Parking parking;
         parking = converterService.toEntity(newParking, Parking.class).orElseThrow(IllegalArgumentException::new);
         parking.setAllSlotsCount(0);
         parking.setFreeSlotsCount(0);
         parking.setConfirmed(true);
-        return converterService.toDto(parkingRepo.save(parking),ParkingDto.class).orElse(null);
+        return converterService.toDto(parkingRepo.save(parking), ParkingDto.class).orElse(null);
     }
 
 }

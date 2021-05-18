@@ -53,7 +53,7 @@ public class ScheduledRecognition {
             int freeCount = (int) results.stream().filter(slot -> slot.getClassName().equals("free")).count();
             parking.setFreeSlotsCount(freeCount);
             parking.setAllSlotsCount(results.size());
-            parking.setImage(createImage(results, image));
+            //parking.setImage(createImage(results, image));
             parkingRepo.save(parking);
             log.info("UPDATED STATE IN " + parking.getAddress());
         } catch (IOException e) {
@@ -110,12 +110,13 @@ public class ScheduledRecognition {
     }
 
     private byte[] createImage(List<ObjectDetectionResult> results, BufferedImage image) {
-        BufferedImage bufferedImage = new BufferedImage(image.getWidth(), image.getHeight(), BufferedImage.TYPE_INT_RGB);
+        int width = image.getWidth();//(int)(1.1*results.stream().map(e -> e.getX()+e.getWidth()).max(Integer::compareTo).orElseGet(image::getWidth));
+        int height = image.getHeight();//(int)(1.1*results.stream().map(e -> e.getY()+e.getHeight()).max(Integer::compareTo).orElseGet(image::getHeight));
+        BufferedImage bufferedImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
         Graphics2D g2d = bufferedImage.createGraphics();
-        g2d.setColor(Color.white);
-        g2d.fillRect(0, 0, image.getWidth(), image.getHeight());
-
         g2d.setColor(Color.lightGray);
+        g2d.fillRect(0, 0, width, height);
+        g2d.setStroke(new BasicStroke(4f));
         for (ObjectDetectionResult r : results) {
             g2d.setColor(r.getClassName().equals("free") ? Color.green : Color.red);
             g2d.draw(new Rectangle2D.Double(r.getX(), r.getY(),
