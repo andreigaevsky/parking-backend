@@ -16,7 +16,9 @@ import java.awt.*;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URL;
 import java.util.*;
 import java.util.List;
@@ -34,7 +36,7 @@ public class ScheduledRecognition {
     private YoloService yoloService;
 
 
-    @Scheduled(fixedRate = 180000)
+    @Scheduled(fixedRate = 20000)
     public void getCurrentSlotsState() {
         log.info("UPDATING PARKINGS STARTING...");
         List<Parking> parkings = parkingRepo.findAll();
@@ -48,18 +50,89 @@ public class ScheduledRecognition {
     private void fillData(Parking parking) {
         try {
             BufferedImage image = getImage(parking.getUrl());
-            List<ObjectDetectionResult> results = filterOut(yoloService.recognize(image));
+            List<ObjectDetectionResult> detectionResults = yoloService.recognize(image);
+            List<ObjectDetectionResult> results = applyCorrections(detectionResults);
+
 
             int freeCount = (int) results.stream().filter(slot -> slot.getClassName().equals("free")).count();
             parking.setFreeSlotsCount(freeCount);
-            parking.setAllSlotsCount(results.size());
-            //parking.setImage(createImage(results, image));
+            if(parking.getAllSlotsCount() == 0) {
+                parking.setAllSlotsCount(results.size());
+            }
+            parking.setImage(createImage(results, image));
             parkingRepo.save(parking);
             log.info("UPDATED STATE IN " + parking.getAddress());
         } catch (IOException e) {
             log.error(e.getMessage());
         } catch (NullPointerException e) {
             log.error("NULL POINTER - " + e.getMessage());
+        }
+    }
+
+    private List<ObjectDetectionResult> applyCorrections(List<ObjectDetectionResult> detections) {
+        long startTime = System.nanoTime();
+        log.info("CORRECTION STARTED");
+        List<ObjectDetectionResult> results = filterOut(detections);
+        eliminateIntersections(results);
+        setAverageYPos(results);
+        log.info("CORRECTION ENDED IN " + (startTime - System.nanoTime())/ 1000000 +"ms");
+        return results;
+    }
+
+    private void eliminateIntersections(List<ObjectDetectionResult> results) {
+        results.forEach(r -> {
+            List<ObjectDetectionResult> intersections = getIntersections(results, r.getRectangle());
+            intersections.forEach(object -> {
+                Rectangle intersection = object.getRectangle().intersection(r.getRectangle());
+                if (!intersection.isEmpty()) {
+                    if (intersection.width > r.getWidth() / 2) {
+                        int differ = (int) Math.ceil(intersection.height / 2.0);
+                        if (object.getRectangle().y > r.getRectangle().y) {
+                            object.setY(object.getY() + differ);
+                            object.getRectangle().y = object.getY() + differ;
+                            r.setHeight(r.getHeight() - differ);
+                            r.getRectangle().height = r.getHeight() - differ;
+                        } else {
+                            r.setY(r.getY() + differ);
+                            r.getRectangle().y = r.getY() + differ;
+                            object.setHeight(object.getHeight() - differ);
+                            object.getRectangle().height = object.getHeight() - differ;
+                        }
+                    } else {
+                        int differ = (int) Math.ceil(intersection.width / 2.0);
+                        if (object.getRectangle().x > r.getRectangle().x) {
+                            object.setX(object.getX() + differ);
+                            object.getRectangle().x = object.getX() + differ;
+                            r.setWidth(r.getWidth() - differ);
+                            r.getRectangle().width = r.getWidth() - differ;
+                        } else {
+                            r.setX(r.getX() + differ);
+                            r.getRectangle().x = r.getX() + differ;
+                            object.setWidth(object.getWidth() - differ);
+                            object.getRectangle().width = object.getWidth() - differ;
+                        }
+                    }
+                }
+            });
+        });
+    }
+
+    private void setAverageYPos(List<ObjectDetectionResult> results) {
+        List<ObjectDetectionResult> copy = new ArrayList<>(results);
+        while (!copy.isEmpty()) {
+            ObjectDetectionResult top = copy.get(0);
+            List<ObjectDetectionResult> line = copy.stream().filter(r -> (r.getY() <= top.getY() && r.getY() + r.getHeight() >= top.getY())
+                  || (r.getY() >= top.getY() && r.getY() <= top.getY() +top.getHeight() )
+            ).collect(Collectors.toList());
+            int max = line.stream().mapToInt(ObjectDetectionResult::getHeight).max().getAsInt();
+            line = copy.stream().filter(r -> (r.getY() <= top.getY() && r.getY() + max>= top.getY())
+                  || (r.getY() >= top.getY() && r.getY() <= top.getY() +max )
+            ).collect(Collectors.toList());
+            line.forEach(r -> {
+                r.setY(top.getY());
+                r.getRectangle().y = top.getY();
+            });
+            copy.removeAll(line);
         }
     }
 
@@ -81,10 +154,10 @@ public class ScheduledRecognition {
                 if (!intersections.isEmpty()) {
                     detections.removeAll(intersections);
                     Map<String, List<ObjectDetectionResult>> grouped = intersections.stream().collect(Collectors.groupingBy(ObjectDetectionResult::getClassName));
-                    int x = intersections.stream().max(Comparator.comparing(ObjectDetectionResult::getX)).get().getX();
-                    int y = intersections.stream().max(Comparator.comparing(ObjectDetectionResult::getY)).get().getY();
-                    int width = intersections.stream().max(Comparator.comparing(ObjectDetectionResult::getWidth)).get().getWidth();
-                    int height = intersections.stream().max(Comparator.comparing(ObjectDetectionResult::getHeight)).get().getHeight();
+                    //int x = intersections.stream().max(Comparator.comparing(ObjectDetectionResult::getX)).get().getX();
+                    //int y = intersections.stream().max(Comparator.comparing(ObjectDetectionResult::getY)).get().getY();
+                   // int width = intersections.stream().max(Comparator.comparing(ObjectDetectionResult::getWidth)).get().getWidth();
+                   // int height = intersections.stream().max(Comparator.comparing(ObjectDetectionResult::getHeight)).get().getHeight();
                     ObjectDetectionResult res = null;
                     Iterator<Map.Entry<String, List<ObjectDetectionResult>>> i = grouped.entrySet().iterator();
                     List<ObjectDetectionResult> firstList = i.next().getValue();
@@ -92,7 +165,7 @@ public class ScheduledRecognition {
                     if (i.hasNext()) {
                         secondList = i.next().getValue();
                     }
-                    res = firstList.size() > secondList.size() ? firstList.get(0) : secondList.get(0);
+                    //res = firstList.size() > secondList.size() ? firstList.get(0) : secondList.get(0);
                     toShow.add(object);
                     //toShow.add(new ObjectDetectionResult(res.getClassId(), res.getClassName(), res.getConfidence(), x, y, width, height));
                 } else {
@@ -109,23 +182,53 @@ public class ScheduledRecognition {
         return detections.stream().filter(d -> !d.getRectangle().intersection(r).isEmpty()).collect(Collectors.toList());
     }
 
-    private byte[] createImage(List<ObjectDetectionResult> results, BufferedImage image) {
-        int width = image.getWidth();//(int)(1.1*results.stream().map(e -> e.getX()+e.getWidth()).max(Integer::compareTo).orElseGet(image::getWidth));
-        int height = image.getHeight();//(int)(1.1*results.stream().map(e -> e.getY()+e.getHeight()).max(Integer::compareTo).orElseGet(image::getHeight));
+    private byte[] createImage(List<ObjectDetectionResult> results, BufferedImage image) throws IOException{
+        long startTime = System.nanoTime();
+        log.info("CREATING IMAGE STARTED");
+        int width = (int)(1.1*results.stream().map(e -> e.getX()+e.getWidth()).max(Integer::compareTo).orElseGet(image::getWidth));
+        int height = (int)(1.1*results.stream().map(e -> e.getY()+e.getHeight()).max(Integer::compareTo).orElseGet(image::getHeight));
+
+
+        int carWidth = (int) results.stream().mapToInt(ObjectDetectionResult::getHeight).summaryStatistics().getAverage();
+        ImageResizer.resize(carWidth*100*2.5/293.0);
+        double ww = 293 * carWidth*2.5/293.0;
+        double hh = 556 * carWidth*2.5/293.0;
+        ClassLoader classloader = Thread.currentThread().getContextClassLoader();
+        var img = ImageIO.read(  new File("resized.png"));
+
         BufferedImage bufferedImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
         Graphics2D g2d = bufferedImage.createGraphics();
         g2d.setColor(Color.lightGray);
         g2d.fillRect(0, 0, width, height);
         g2d.setStroke(new BasicStroke(4f));
         for (ObjectDetectionResult r : results) {
-            g2d.setColor(r.getClassName().equals("free") ? Color.green : Color.red);
-            g2d.draw(new Rectangle2D.Double(r.getX(), r.getY(),
-                    r.getWidth(),
-                    r.getHeight()));
+            boolean free = r.getClassName().equals("free");
+            if(free) {
+                g2d.setColor(Color.green);
+            g2d.draw(new Rectangle2D.Double(r.getX(), r.getY() + (r.getHeight()/2.0),
+                    ww,
+                    hh));
+            } else {
+                g2d.drawImage(img, r.getX(), r.getY(), null);
+            }
         }
         g2d.dispose();
-
+        log.info("CREATING IMAGE IN " + (startTime - System.nanoTime())/ 1000000 +"ms");
         return encodeToBytes(bufferedImage, "png");
+    }
+
+    public static void main(String[] args) {
+        try
+        {
+            ClassLoader classloader = Thread.currentThread().getContextClassLoader();
+            var img = ImageIO.read(  classloader.getResourceAsStream("images/car.png"));
+
+            System.out.println(img);
+        }
+        catch ( IOException exc )
+        {
+            System.out.println(exc);
+        }
     }
 
     public static byte[] encodeToBytes(BufferedImage image, String type) {

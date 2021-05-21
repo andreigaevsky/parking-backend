@@ -16,7 +16,9 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/parking")
@@ -31,7 +33,7 @@ public class Parking {
 
     @GetMapping("/all")
     public ResponseEntity<List<ParkingDto>> getAll() {
-        return ResponseEntity.ok(parkingService.getAllParkingInfo());
+        return ResponseEntity.ok(parkingService.getAllParkingInfo().stream().sorted(Comparator.comparingLong(ParkingDto::getId)).collect(Collectors.toList()));
     }
 
     @PostMapping("/new")

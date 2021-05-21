@@ -28,7 +28,7 @@ public class YoloService {
                 SIZE, SIZE
         );
         yolo.loadLabels(names);
-        yolo.setConfidenceThreshold(0.35f);
+        yolo.setConfidenceThreshold(0.2f);
         yolo.setup();
     }
 
